@@ -13,9 +13,5 @@ public class BSTreeTest {
     tree.insert(30);
 
     tree.show();
-
-    tree.remove(10);
-
-    tree.show();
   }
 }

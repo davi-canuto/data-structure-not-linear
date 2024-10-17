@@ -21,12 +21,8 @@ public class BSTree {
     this.size = 0;
   }
 
-  Comparator getComparator() {
-    return this.comparator;
-  }
-
   Node search(Node node, Object key) {
-    Comparator comparator = getComparator();
+    Comparator comparator = this.comparator;
     int compareRes = comparator.compare(key, node.getElement());
 
     if (compareRes == 0) {
@@ -48,7 +44,7 @@ public class BSTree {
   }
 
   Node insert(Object key) {
-    Comparator comparator = getComparator();
+    Comparator comparator = this.comparator;
     Node newNode = new Node(key);
 
     if (root == null) {
@@ -76,9 +72,9 @@ public class BSTree {
     Node node = search(root, key);
     System.out.println(node.getElement());
 
-    if (node.getElement() != key || root == null) {
-      return null;
-    }
+      if (node.getElement() != key || root == null) {
+        return null;
+      }
 
     if (root.getElement() == key) {
       // getSuccessor(root);
@@ -86,7 +82,7 @@ public class BSTree {
 
     if (isExternal(node)) {
       Node dad = node.getDad();
-      if (getComparator().compare(node.getElement(), dad.getElement()) < 0) {
+      if (this.comparator.compare(node.getElement(), dad.getElement()) < 0) {
         dad.setLeftChildren(null);
       } else {
         dad.setRightChildren(node);
@@ -128,7 +124,7 @@ public class BSTree {
   }
 
   void beforeOrderRemove(Node node) {
-    Comparator comparator = getComparator();
+    Comparator comparator = this.comparator;
 
     if (node.hasLeftChildren() == false) {
       Node reallyDad = node.getDad().getDad();
