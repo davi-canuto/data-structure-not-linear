@@ -70,31 +70,47 @@ public class BSTree {
 
   Object remove(Object key) {
     Node node = search(root, key);
-    System.out.println(node.getElement());
 
-      if (node.getElement() != key || root == null) {
-        return null;
-      }
-
-    if (root.getElement() == key) {
-      // getSuccessor(root);
+    if (node.getElement() != key || root == null) {
+      return null;
     }
-
+    
     if (isExternal(node)) {
       Node dad = node.getDad();
+      
       if (this.comparator.compare(node.getElement(), dad.getElement()) < 0) {
         dad.setLeftChildren(null);
       } else {
-        dad.setRightChildren(node);
+        dad.setRightChildren(null);
       }
-    } else {
-      if (node.hasRightChildren()) {
-        beforeOrderRemove(node.getRightChildren());
+    } 
+
+    else if (node.hasLeftChildren() && !node.hasRightChildren()) {
+      Node dad = node.getDad();
+      if (dad.getLeftChildren() == node) {
+        dad.setLeftChildren(node.getLeftChildren());
       } else {
-        node.getLeftChildren().setDad(node.getDad());
-        node.getDad().setLeftChildren(node.getLeftChildren());
+        dad.setRightChildren(node.getLeftChildren());
+      }
+      node.getLeftChildren().setDad(dad);
+    } else if (!node.hasLeftChildren() && node.hasRightChildren()) {
+      Node dad = node.getDad();
+      if (dad.getRightChildren() == node) {
+        dad.setRightChildren(node.getRightChildren());
+      } else {
+        dad.setLeftChildren(node.getRightChildren());
+      }
+      node.getRightChildren().setDad(dad);
+    } else if (node.hasLeftChildren() && node.hasRightChildren()) {
+      Node successor = getSuccessor(node);
+      if (successor != null) {
+        Object temp = successor.getElement();
+        remove(successor.getElement());
+        node.setElement(temp);
+        return key;
       }
     }
+    
     size = size - 1;
     return node.getElement();
   }
