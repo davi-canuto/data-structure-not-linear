@@ -1,5 +1,5 @@
 // Source code is decompiled from a .class file using FernFlower decompiler.
-package BinarySearchTree;
+package AVL;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,12 +9,14 @@ public class Node {
   private Node leftChildren;
   private Node rightChildren;
   private Node dad;
+  private int fbc;
 
   public Node(Object variable) {
     this.element = variable;
     this.leftChildren = null;
     this.rightChildren = null;
     this.dad = null;
+    this.fbc = 0;
   }
 
   public Object getElement() {
@@ -23,6 +25,15 @@ public class Node {
 
   public void setElement(Object variable) {
     this.element = variable;
+  }
+  
+  public Integer getFbc() {
+    return this.fbc;
+  }
+
+  public Integer setFbc(Integer variable) {
+    this.fbc = variable;
+    return this.fbc;
   }
 
   public Node getLeftChildren() {

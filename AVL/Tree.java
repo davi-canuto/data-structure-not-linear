@@ -1,26 +1,28 @@
-package BinarySearchTree;
+package AVL;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class BSTree {
+import BinarySearchTree.Comparator;
+
+public class Tree {
   Comparator comparator;
-  BSNode root;
+  Node root;
   Integer size;
 
-  public BSTree(Object o) {
+  public Tree(Object o) {
     this.comparator = new Comparator();
-    this.root = new BSNode(o);
+    this.root = new Node(o);
     this.size = 0;
   }
 
-  public BSTree() {
+  public Tree() {
     this.comparator = new Comparator();
     this.root = null;
     this.size = 0;
   }
 
-  public BSNode search(BSNode node, Object key) {
+  public Node search(Node node, Object key) {
     Comparator comparator = this.comparator;
     int compareRes = comparator.compare(key, node.getElement());
 
@@ -42,16 +44,16 @@ public class BSTree {
     return node;
   }
 
-  public BSNode insert(Object key) {
+  public Node insert(Object key) {
     Comparator comparator = this.comparator;
-    BSNode newNode = new BSNode(key);
+    Node newNode = new Node(key);
 
     if (root == null) {
-      this.root = new BSNode(key);
+      this.root = new Node(key);
       size = size + 1;
       return root;
     } else {
-      BSNode returnedNode = search(root, key);
+      Node returnedNode = search(root, key);
 
       int comparatorRes = comparator.compare(key, returnedNode.getElement());
 
@@ -68,24 +70,24 @@ public class BSTree {
   }
 
   public Object remove(Object key) {
-    BSNode node = search(root, key);
+    Node node = search(root, key);
 
     if (node.getElement() != key || root == null) {
       return null;
     }
-    
+
     if (isExternal(node)) {
-      BSNode dad = node.getDad();
-      
+      Node dad = node.getDad();
+
       if (this.comparator.compare(node.getElement(), dad.getElement()) < 0) {
         dad.setLeftChildren(null);
       } else {
         dad.setRightChildren(null);
       }
-    } 
+    }
 
     else if (node.hasLeftChildren() && !node.hasRightChildren()) {
-      BSNode dad = node.getDad();
+      Node dad = node.getDad();
       if (dad.getLeftChildren() == node) {
         dad.setLeftChildren(node.getLeftChildren());
       } else {
@@ -93,7 +95,7 @@ public class BSTree {
       }
       node.getLeftChildren().setDad(dad);
     } else if (!node.hasLeftChildren() && node.hasRightChildren()) {
-      BSNode dad = node.getDad();
+      Node dad = node.getDad();
       if (dad.getRightChildren() == node) {
         dad.setRightChildren(node.getRightChildren());
       } else {
@@ -101,7 +103,7 @@ public class BSTree {
       }
       node.getRightChildren().setDad(dad);
     } else if (node.hasLeftChildren() && node.hasRightChildren()) {
-      BSNode successor = getSuccessor(node);
+      Node successor = getSuccessor(node);
       if (successor != null) {
         Object temp = successor.getElement();
         remove(successor.getElement());
@@ -109,27 +111,27 @@ public class BSTree {
         return key;
       }
     }
-    
+
     size = size - 1;
     return node.getElement();
   }
 
-  public BSNode getRoot() {
+  public Node getRoot() {
     return root;
   }
 
-  public BSNode getSuccessor(BSNode node) {
+  public Node getSuccessor(Node node) {
     if (node == null) {
       return null;
     }
     if (node.getRightChildren() != null) {
-      BSNode newNode = node.getRightChildren();
+      Node newNode = node.getRightChildren();
       while (newNode.getLeftChildren() != null) {
         newNode = newNode.getLeftChildren();
       }
       return newNode;
     } else {
-      BSNode dad = node.getDad();
+      Node dad = node.getDad();
       while (dad != null && node == dad.getRightChildren()) {
         node = dad;
         dad = dad.getDad();
@@ -138,11 +140,11 @@ public class BSTree {
     }
   }
 
-  public void beforeOrderRemove(BSNode node) {
+  public void beforeOrderRemove(Node node) {
     Comparator comparator = this.comparator;
 
     if (node.hasLeftChildren() == false) {
-      BSNode reallyDad = node.getDad().getDad();
+      Node reallyDad = node.getDad().getDad();
       node.setDad(reallyDad);
       if (comparator.compare(node.getElement(), reallyDad.getElement()) > 0) {
         reallyDad.setRightChildren(node);
@@ -152,7 +154,7 @@ public class BSTree {
     }
 
     while (node.hasLeftChildren() == true) {
-      BSNode next = node.getLeftChildren();
+      Node next = node.getLeftChildren();
       beforeOrderRemove(next);
     }
   }
@@ -164,11 +166,11 @@ public class BSTree {
 
     int[][] matriz = new int[height][size];
 
-    ArrayList<BSNode> nodes = new ArrayList<>();
-    Iterator<BSNode> nodesIterator = inOrder(nodes, root);
+    ArrayList<Node> nodes = new ArrayList<>();
+    Iterator<Node> nodesIterator = inOrder(nodes, root);
 
     while (nodesIterator.hasNext()) {
-      BSNode next = nodesIterator.next();
+      Node next = nodesIterator.next();
       int key = (int) next.getElement();
 
       int depth = depth(next);
@@ -180,7 +182,10 @@ public class BSTree {
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < size; j++) {
         if (matriz[i][j] != 0) {
-          System.out.printf("%-4d", matriz[i][j]);
+          Node node = nodes.get(j);
+          int fbc = node.getFbc(); // Supondo que getFbc() seja o método para obter o valor de fbc
+          System.out.printf("%-4d", node.getElement());
+          System.out.printf("[%s]", fbc);
         } else {
           System.out.print("    ");
         }
@@ -189,7 +194,7 @@ public class BSTree {
     }
   }
 
-  public Iterator<BSNode> inOrder(ArrayList<BSNode> nodes, BSNode v) {
+  public Iterator<Node> inOrder(ArrayList<Node> nodes, Node v) {
     if (!isExternal(v) && v.getLeftChildren() != null) {
       inOrder(nodes, v.getLeftChildren());
     }
@@ -203,16 +208,16 @@ public class BSTree {
     return nodes.iterator();
   }
 
-  public int height(BSNode node) {
+  public int height(Node node) {
     if (isExternal(node)) {
       return 0;
     } else {
       int h = 0;
 
-      Iterator<BSNode> childrens = node.children();
+      Iterator<Node> childrens = node.children();
 
       while (childrens.hasNext()) {
-        BSNode next = childrens.next();
+        Node next = childrens.next();
         h = max(h, height(next));
       }
 
@@ -220,7 +225,7 @@ public class BSTree {
     }
   }
 
-  public int depth(BSNode node) {
+  public int depth(Node node) {
     if (node == root) {
       return 0;
     } else {
@@ -228,11 +233,11 @@ public class BSTree {
     }
   }
 
-  public Iterator<BSNode> nodes(BSNode n) {
-    ArrayList<BSNode> nodes = new ArrayList<>();
+  public Iterator<Node> nodes(Node n) {
+    ArrayList<Node> nodes = new ArrayList<>();
 
     nodes.add(n);
-    Iterator<BSNode> childrens = root.children();
+    Iterator<Node> childrens = root.children();
 
     while (childrens.hasNext()) {
       nodes(childrens.next());
@@ -241,11 +246,11 @@ public class BSTree {
     return nodes.iterator();
   }
 
-  public ArrayList<BSNode> arrayOfNodes(BSNode n) {
-    ArrayList<BSNode> nodes = new ArrayList<>();
+  public ArrayList<Node> arrayOfNodes(Node n) {
+    ArrayList<Node> nodes = new ArrayList<>();
 
     nodes.add(n);
-    Iterator<BSNode> childrens = root.children();
+    Iterator<Node> childrens = root.children();
 
     while (childrens.hasNext()) {
       nodes(childrens.next());
@@ -262,7 +267,7 @@ public class BSTree {
     return size == 0;
   }
 
-  public boolean isExternal(BSNode node) {
+  public boolean isExternal(Node node) {
     boolean res = false;
     if (node == root)
       res = false;
