@@ -65,6 +65,9 @@ public class Tree {
         newNode.setDad(returnedNode);
       }
     }
+
+    updateFbcInsert(newNode);
+
     size = size + 1;
     return newNode;
   }
@@ -278,5 +281,24 @@ public class Tree {
 
   public int max(int a, int b) {
     return Math.max(a, b);
+  }
+
+  public void updateFbcInsert(Node node) {
+    Comparator comparator = this.comparator;
+    node.setFbc(0);
+    Node dad = node.getDad();
+
+    while (dad != null) {
+      Integer res = comparator.compare(node.getElement(), dad.getElement());
+
+      if (res < 0) {
+        dad.setFbc(dad.getFbc() - 1);
+      } else {
+        dad.setFbc(dad.getFbc() + 1);
+      }
+
+      node = dad;
+      dad = node.getDad();
+    }
   }
 }
