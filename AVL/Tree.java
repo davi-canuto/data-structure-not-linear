@@ -292,13 +292,17 @@ public class Tree {
       Integer res = comparator.compare(node.getElement(), dad.getElement());
 
       if (res < 0) {
-        dad.setFbc(dad.getFbc() - 1);
-      } else {
         dad.setFbc(dad.getFbc() + 1);
+      } else {
+        dad.setFbc(dad.getFbc() - 1);
       }
 
       node = dad;
       dad = node.getDad();
+
+      if(node.getFbc() == 0) {
+        break;
+      }
     }
   }
 }
