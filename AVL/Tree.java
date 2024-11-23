@@ -282,6 +282,38 @@ public class Tree {
   public int max(int a, int b) {
     return Math.max(a, b);
   }
+  
+  public int min(int a, int b) {
+    return Math.min(a, b);
+  }
+
+  public void leftRotation(Node a, Node b) {
+    Integer fbBNew = b.getFbc() + 1 - min(a.getFbc(), 0);
+    Integer fbANew = a.getFbc() + 1 + max(fbBNew, 0);
+    b.setFbc(fbBNew);
+    a.setFbc(fbANew);
+  }
+
+  public void rightRotation(Node a, Node b) {
+    Integer fbBNew = b.getFbc() - 1 - max(a.getFbc(), 0);
+    Integer fbANew = a.getFbc() - 1 + min(fbBNew, 0);
+    a.setFbc(fbANew);
+    b.setFbc(fbBNew);
+  }
+
+  public void balance(Node node) {
+    if (node.getFbc() > 1) {
+      if (node.getLeftChildren().getFbc() < 0) {
+        leftRotation(node.getLeftChildren(), node);
+      }
+      rightRotation(node.getLeftChildren(), node);
+    } else if (node.getFbc() < -1) {
+      if (node.getRightChildren().getFbc() > 0) {
+        rightRotation(node.getRightChildren(), node);
+      }
+      leftRotation(node.getRightChildren(), node);
+    }
+  } 
 
   public void updateFbcInsert(Node node) {
     Comparator comparator = this.comparator;
@@ -295,6 +327,11 @@ public class Tree {
         dad.setFbc(dad.getFbc() + 1);
       } else {
         dad.setFbc(dad.getFbc() - 1);
+      }
+
+      if(dad.getFbc() > 1 || dad.getFbc() < -1) {
+        balance(dad);
+        continue;
       }
 
       node = dad;
