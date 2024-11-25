@@ -287,31 +287,76 @@ public class Tree {
     return Math.min(a, b);
   }
 
-  public void leftRotation(Node a, Node b) {
-    Integer fbBNew = b.getFbc() + 1 - min(a.getFbc(), 0);
-    Integer fbANew = a.getFbc() + 1 + max(fbBNew, 0);
-    b.setFbc(fbBNew);
-    a.setFbc(fbANew);
+  public void leftRotation(Node node) {
+    Node rightChild = node.getRightChildren();
+    Node parent = node.getDad();
+
+    node.setRightChildren(rightChild.getLeftChildren());
+    if (rightChild.getLeftChildren() != null) {
+      rightChild.getLeftChildren().setDad(node);
+    }
+
+    rightChild.setLeftChildren(node);
+    node.setDad(rightChild);
+
+    if (parent == null) {
+      root = rightChild;
+    } else if (parent.getRightChildren() == node) {
+      parent.setRightChildren(rightChild);
+    } else {
+      parent.setLeftChildren(rightChild);
+    }
+    rightChild.setDad(parent);
+    Integer fbBNew = (node.getFbc() + 1) - min(rightChild.getFbc(), 0);
+    Integer fbANew = (rightChild.getFbc() + 1) + max(fbBNew, 0);
+
+    node.setFbc(fbBNew);
+    rightChild.setFbc(fbANew);
   }
 
-  public void rightRotation(Node a, Node b) {
-    Integer fbBNew = b.getFbc() - 1 - max(a.getFbc(), 0);
-    Integer fbANew = a.getFbc() - 1 + min(fbBNew, 0);
-    a.setFbc(fbANew);
-    b.setFbc(fbBNew);
+  public void rightRotation(Node node) {
+    Node leftChild = node.getLeftChildren();
+    Node parent = node.getDad();
+
+    node.setLeftChildren(leftChild.getRightChildren());
+    if (leftChild.getRightChildren() != null) {
+      leftChild.getRightChildren().setDad(node);
+    }
+
+    leftChild.setRightChildren(node);
+    node.setDad(leftChild);
+
+    if (parent == null) {
+      root = leftChild;
+    } else if (parent.getLeftChildren() == node) {
+      parent.setLeftChildren(leftChild);
+    } else {
+      parent.setRightChildren(leftChild);
+    }
+    leftChild.setDad(parent);
+
+    Integer fbBNew = (node.getFbc() - 1) - max(leftChild.getFbc(), 0);
+    Integer fbANew = leftChild.getFbc() - 1 + min(fbBNew, 0);
+
+    node.setFbc(fbBNew);
+    leftChild.setFbc(fbANew);
   }
 
   public void balance(Node node) {
     if (node.getFbc() > 1) {
       if (node.getLeftChildren().getFbc() < 0) {
-        leftRotation(node.getLeftChildren(), node);
+        leftRotation(node.getLeftChildren());
+        rightRotation(node);
+        return;
       }
-      rightRotation(node.getLeftChildren(), node);
+      rightRotation(node);
     } else if (node.getFbc() < -1) {
       if (node.getRightChildren().getFbc() > 0) {
-        rightRotation(node.getRightChildren(), node);
+        rightRotation(node.getRightChildren());
+        leftRotation(node);
+        return;
       }
-      leftRotation(node.getRightChildren(), node);
+      leftRotation(node);
     }
   } 
 
@@ -331,7 +376,6 @@ public class Tree {
 
       if(dad.getFbc() > 1 || dad.getFbc() < -1) {
         balance(dad);
-        continue;
       }
 
       node = dad;
