@@ -1,30 +1,22 @@
 package Graph;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.AbstractList;
 
-public class Graph {
-  public Vertex[] endVertex(Edge e) {
-  }
+public class GraphTest {
+  public static void main(String[] args) {
+    Graph graph = new Graph();
+    Vertice v0 = graph.insertVertice(0);
+    Vertice v1 = graph.insertVertice(1);
+    Vertice v2 = graph.insertVertice(2);
 
-  public Vertex opposite(Vertex v, Edge e) {
-  }
+    Edge e0 = graph.insertEdge(v1, v0, 5);
+    Edge e1 = graph.insertEdge(v1, v2, 10);
+    Edge e2 = graph.insertEdge(v2, v0, 15);
 
-  public boolean isAdjacent(Vertex v, Vertex w) {
-  }
-
-  public void replace(Vertex v, Object x) {
-  }
-
-  public void replace(Edge e, Object x) {
-  }
-
-  public Vertex insertVertex(Object o) {
-  }
-
-  public Edge insertEdge(Vertex v, Vertex w, Object o) {
-  }
-
-  public Vertex removeVertex(Vertex v) {
-  }
-
-  public Edge removeEdge(Edge e) {
+    graph.vertices.forEach(v -> {
+      System.out.println("Vertice: " + v.getId());
+      System.out.println("    Adjacents ids: " + v.getAdjacentsIds());
+    });
   }
 }
