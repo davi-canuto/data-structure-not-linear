@@ -1,7 +1,6 @@
 package Graph;
 
 import java.util.*;
-import java.util.AbstractList;
 
 public class Graph {
   ArrayList<Vertice> vertices;
@@ -16,14 +15,26 @@ public class Graph {
   // public Vertice opposite(Vertice v, Edge e) {
   // }
 
-  // public boolean isAdjacent(Vertice v, Vertice w) {
-  // }
+  public boolean isAdjacent(Vertice v, Vertice w) {
+    if (v == null || w == null) {
+      return false;
+    }
+    if (v.adjacentsVertices.contains(w)) {
+      return true;
+    }
+    if (w.adjacentsVertices.contains(v)) {
+      return true;
+    }
+    return false;
+  }
 
-  // public void replace(Vertice v, Object x) {
-  // }
+  public void replace(Vertice v, Object x) {
+    v.setId(x);
+  }
 
-  // public void replace(Edge e, Object x) {
-  // }
+  public void replace(Edge e, Object x) {
+    e.setValue(x);
+  }
 
   public Vertice insertVertice(Object o) {
     if (o == null) {
@@ -52,9 +63,37 @@ public class Graph {
     return newEdge;
   }
 
-  // public Vertice removeVertice(Vertice v) {
-  // }
+  public Object removeVertice(Vertice v) {
+    if (v == null) {
+      return null;
+    }
 
-  // public Edge removeEdge(Edge e) {
-  // }
+    this.vertices.remove(v);
+
+    v.edges.forEach(edge -> {
+      if (edge.origin.edges.contains(edge)) {
+        System.out.println(v.edges.size());
+        edge.origin.edges.remove(edge);
+      } 
+      if (edge.destiny.edges.contains(edge)) {
+        System.out.println(v.edges.size());
+        edge.destiny.edges.remove(edge);
+      }
+    });
+
+    return v.getId();
+  }
+
+  public Object removeEdge(Edge e) {
+    if (e == null) {
+      return null;
+    }
+
+    e.origin.edges.remove(e);
+    e.destiny.edges.remove(e);
+
+    e.origin.adjacentsVertices.remove(e.destiny);
+
+    return e.getValue();
+  }
 }

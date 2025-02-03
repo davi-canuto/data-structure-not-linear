@@ -1,7 +1,4 @@
 package Graph;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.AbstractList;
 
 public class GraphTest {
   public static void main(String[] args) {
@@ -13,6 +10,15 @@ public class GraphTest {
     Edge e0 = graph.insertEdge(v1, v0, 5);
     Edge e1 = graph.insertEdge(v1, v2, 10);
     Edge e2 = graph.insertEdge(v2, v0, 15);
+
+    graph.vertices.forEach(v -> {
+      System.out.println("Vertice: " + v.getId());
+      System.out.println("    Adjacents ids: " + v.getAdjacentsIds());
+    });
+
+    System.out.println("Removing vertice 1");
+    
+    graph.removeVertice(v1);
 
     graph.vertices.forEach(v -> {
       System.out.println("Vertice: " + v.getId());

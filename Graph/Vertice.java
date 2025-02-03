@@ -3,7 +3,7 @@ package Graph;
 import java.util.ArrayList;
 
 public class Vertice {
-  private Object id;
+  public Object id;
   public ArrayList<Vertice> adjacentsVertices;
   public ArrayList<Edge> edges;
 
@@ -15,6 +15,10 @@ public class Vertice {
 
   public Object getId() {
     return this.id;
+  }
+  
+  public void setId(Object newId) {
+    this.id = newId;
   }
 
   public ArrayList<Object> getAdjacentsIds() {
