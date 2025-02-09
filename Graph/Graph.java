@@ -9,11 +9,17 @@ public class Graph {
     this.vertices = new ArrayList<Vertice>();
   }
 
-  // public Vertice[] endVertice(Edge e) {
+  // public Vertice[] edgeDestinies(Edge e) {
+  // pelo texto nao entendi especificamente o que era 
   // }
 
-  // public Vertice opposite(Vertice v, Edge e) {
-  // }
+  public Vertice opposite(Vertice v, Edge e) throws Exception {
+    if (e.origin == v) {
+      return e.destiny;
+    } else {
+      throw new Exception("Vertice is not incident to this edge");
+    }
+  }
 
   public boolean isAdjacent(Vertice v, Vertice w) {
     if (v == null || w == null) {

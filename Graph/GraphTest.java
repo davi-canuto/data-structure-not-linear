@@ -27,5 +27,12 @@ public class GraphTest {
       System.out.println("Vertice: " + v.getId());
       System.out.println("    Adjacents ids: " + v.getAdjacentsIds());
     });
+
+    System.out.println("");
+    try {
+      System.out.println(graph.opposite(v0, e3).getId());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }
