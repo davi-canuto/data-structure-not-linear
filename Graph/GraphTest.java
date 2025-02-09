@@ -10,15 +10,18 @@ public class GraphTest {
     Edge e0 = graph.insertEdge(v1, v0, 5);
     Edge e1 = graph.insertEdge(v1, v2, 10);
     Edge e2 = graph.insertEdge(v2, v0, 15);
-
+    Edge e3 = graph.insertEdge(v0, v1, 20);
+    
     graph.vertices.forEach(v -> {
       System.out.println("Vertice: " + v.getId());
       System.out.println("    Adjacents ids: " + v.getAdjacentsIds());
     });
 
-    System.out.println("Removing vertice 1");
+    System.out.println("");
+    System.out.println("");
+    System.out.println("Removing vertice  v1");
     
-    graph.removeVertice(v1);
+    graph.removeVertice(v0);
 
     graph.vertices.forEach(v -> {
       System.out.println("Vertice: " + v.getId());

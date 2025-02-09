@@ -67,21 +67,25 @@ public class Graph {
     if (v == null) {
       return null;
     }
+    
+    var id = v.getId();
+    
+    for (int i = 0; i < v.edges.size(); i++) {
+      Edge e = v.edges.get(i);
 
+      if (e.origin.id == id) {
+        e.destiny.adjacentsVertices.remove(v);
+        e.destiny.edges.remove(e);
+      }
+      if (e.destiny.id == id) {
+        e.origin.adjacentsVertices.remove(v);
+        e.origin.edges.remove(e);
+      }
+    } 
+    
     this.vertices.remove(v);
 
-    v.edges.forEach(edge -> {
-      if (edge.origin.edges.contains(edge)) {
-        System.out.println(v.edges.size());
-        edge.origin.edges.remove(edge);
-      } 
-      if (edge.destiny.edges.contains(edge)) {
-        System.out.println(v.edges.size());
-        edge.destiny.edges.remove(edge);
-      }
-    });
-
-    return v.getId();
+    return id;
   }
 
   public Object removeEdge(Edge e) {
